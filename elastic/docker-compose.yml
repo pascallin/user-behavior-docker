@@ -1,0 +1,18 @@
+version: '3'
+services:
+  elasticsearch:
+    hostname: elasticsearch
+    image: "elasticsearch:2"
+    command: "elasticsearch -Des.node.name='user-behavior'"
+    volumes:
+      - /usr/docker/elastic/esdata:/usr/share/elasticsearch/data
+      - /usr/docker/elastic/config:/usr/share/elasticsearch/config
+    ports:
+      - "9201:9200"
+      - "9301:9300"
+    networks:
+      - default
+      - dev3network
+networks:
+  dev3network:
+    external: true
