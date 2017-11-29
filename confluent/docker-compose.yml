@@ -47,43 +47,9 @@ services:
       KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema_registry:8081'
       KAFKA_REST_HOST_NAME: kafka_rest
       KAFKA_REST_DEBUG: 'true'
-  ub_connect:
+  connect:
     image: confluentinc/cp-kafka-connect:3.1.1
-    hostname: ub_connect
-    depends_on:
-      - zookeeper
-      - kafka
-      - schema_registry
-      - kafka_rest
-    external_links:
-      - elastic_elasticsearch_1
-    volumes:
-      - ./kafka-connect-elasticsearch:/etc/kafka-connect-elasticsearch
-      - ./schema-registry:/etc/schema-registry
-    command: [
-      "connect-standalone", 
-      "/etc/schema-registry/ub-connect-avro-standalone.properties", 
-      "/etc/kafka-connect-elasticsearch/user-behavior-elasticsearch.properties"
-    ]
-    environment:
-      CONNECT_REST_ADVERTISED_HOST_NAME: ub_connect
-      CONNECT_REST_HOST_NAME: ub_connect
-      CONNECT_REST_PORT: 8083
-      CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      CONNECT_GROUP_ID: compose-connect-group
-      CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
-      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_OFFSET_FLUSH_INTERVAL_MS: 10000
-      CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
-      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
-      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
-    networks:
-      - default
-      - dev3network
-  tags_connect:
-    image: confluentinc/cp-kafka-connect:3.1.1
-    hostname: tags_connect
+    hostname: connect
     depends_on:
       - zookeeper
       - kafka
@@ -96,12 +62,12 @@ services:
       - ./schema-registry:/etc/schema-registry
     command: [
       "connect-standalone",
-      "/etc/schema-registry/tags-connect-avro-standalone.properties",
-      "/etc/kafka-connect-elasticsearch/tags-elasticsearch.properties"
+      "/etc/schema-registry/connect-avro-standalone.properties",
+      "/etc/kafka-connect-elasticsearch/quickstart-elasticsearch.properties"
     ]
     environment:
-      CONNECT_REST_ADVERTISED_HOST_NAME: tags_connect
-      CONNECT_REST_HOST_NAME: tags_connect
+      CONNECT_REST_ADVERTISED_HOST_NAME: connect
+      CONNECT_REST_HOST_NAME: connect
       CONNECT_REST_PORT: 8083
       CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       CONNECT_GROUP_ID: compose-connect-group
